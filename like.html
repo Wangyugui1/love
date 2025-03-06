@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>恋爱倒计时</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .content {
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .timer {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        .timer b {
+            color: #ff69b4;
+        }
+
+        .quote {
+            font-size: 18px;
+            color: #ff69b4;
+            margin-top: 10px;
+        }
+
+        /* 星空背景 */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0.2; }
+        }
+
+        /* 樱花效果 */
+        .cherry-blossom {
+            position: absolute;
+            width: 10px;
+            height: 6px;
+            background: #ff99cc; /* 粉红色樱花 */
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall 5s linear forwards, sway 2s ease-in-out infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -10vh;
+                opacity: 0.8;
+            }
+            100% {
+                top: 100vh;
+                opacity: 0;
+            }
+        }
+
+        @keyframes sway {
+            0% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(20px) rotate(10deg); }
+            50% { transform: translateX(0) rotate(0deg); }
+            75% { transform: translateX(-20px) rotate(-10deg); }
+            100% { transform: translateX(0) rotate(0deg); }
+        }
+
+        /* 跳动爱心 */
+        .heart {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #ff69b4;
+            transform: rotate(45deg);
+            animation: beat 1s infinite;
+            top: 50%;
+            left: 50%;
+            margin: -20px 0 0 -20px;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #ff69b4;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -20px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: -20px;
+            top: 0;
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1) rotate(45deg); }
+            50% { transform: scale(1.1) rotate(45deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="timer">
+            <b id="d"></b> 天 <b id="h"></b> 小时 <b id="m"></b> 分钟 <b id="s"></b> 秒
+        </div>
+        <div class="quote">既见君子，云胡不喜</div>
+    </div>
+    <div class="heart"></div>
+
+    <script>
+        // 生成星空
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(star);
+        }
+
+        // 生成樱花
+        function createCherryBlossom() {
+            const cherryBlossom = document.createElement('div');
+            cherryBlossom.className = 'cherry-blossom';
+            cherryBlossom.style.left = Math.random() * 100 + 'vw';
+            cherryBlossom.style.animationDuration = Math.random() * 5 + 5 + 's'; // 5-10秒落下
+            cherryBlossom.style.animationDelay = Math.random() * 2 + 's'; // 随机延迟
+            document.body.appendChild(cherryBlossom);
+
+            setTimeout(() => {
+                cherryBlossom.remove();
+            }, 10000); // 与最长动画时间匹配
+        }
+        setInterval(createCherryBlossom, 100); // 每100ms生成一个樱花瓣
+
+        // 计时器
+        function timer() {
+            var start = new Date(2025, 1, 25, 18, 10, 0); // 2025年2月25日18:10
+            var now = new Date();
+            var t = now - start;
+
+            if (t < 0) {
+                document.getElementById('d').innerHTML = 0;
+                document.getElementById('h').innerHTML = "00";
+                document.getElementById('m').innerHTML = "00";
+                document.getElementById('s').innerHTML = "00";
+                return;
+            }
+
+            var days = Math.floor(t / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+            var minutes = Math.floor((t / (1000 * 60)) % 60);
+            var seconds = Math.floor((t / 1000) % 60);
+
+            hours = hours < 10 ? "0" + hours : hours;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById('d').innerHTML = days;
+            document.getElementById('h').innerHTML = hours;
+            document.getElementById('m').innerHTML = minutes;
+            document.getElementById('s').innerHTML = seconds;
+        }
+        timer();
+        setInterval(timer, 1000);
+    </script>
+</body>
+</html>
