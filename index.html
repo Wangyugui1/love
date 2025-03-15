@@ -290,80 +290,12 @@
             to { text-shadow: 0 0 10px #fff, 0 0 25px #fff, 0 0 40px var(--primary-color); }
         }
         
-        /* Photo frame effect */
-        .memory-frame {
-            width: 0;
-            height: 0;
-            position: absolute;
-            top: 30%;
-            left: 0;
-            border-radius: 15px;
-            overflow: hidden;
-            opacity: 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transform: rotate(-5deg) translateX(-100%);
-            transition: all 1s ease;
-            z-index: 15;
-            border: 10px solid rgba(255,255,255,0.3);
-            background: rgba(0,0,0,0.2);
-        }
-        
-        .memory-frame.active {
-            width: 300px;
-            height: 200px;
-            opacity: 1;
-            transform: rotate(-5deg) translateX(20px);
-        }
-        
-        .memory-message {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 10px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            font-size: 14px;
-            text-align: center;
-        }
-        
-        /* Music button */
-        .music-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 100;
-            box-shadow: 0 0 15px rgba(255,20,147,0.5);
-            animation: pulse 2s infinite;
-        }
-        
-        .music-btn::before {
-            content: "♫";
-            font-size: 24px;
-            color: white;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 15px rgba(255,20,147,0.5); }
-            50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(255,20,147,0.7); }
-            100% { transform: scale(1); box-shadow: 0 0 15px rgba(255,20,147,0.5); }
-        }
-        
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .title { font-size: 36px; }
             .timer { padding: 15px; font-size: 22px; }
             .timer b { font-size: 26px; }
             .quote { font-size: 20px; }
-            .memory-frame.active { width: 70vw; height: 40vh; }
         }
         
         /* Animated background */
@@ -401,8 +333,6 @@
     </style>
 </head>
 <body>
-    <div class="music-btn" title="播放/暂停音乐"></div>
-    
     <div class="background-bubbles"></div>
     
     <div class="content">
@@ -451,9 +381,6 @@
     </div>
     
     <div class="heart"></div>
-    <div class="memory-frame">
-        <div class="memory-message">我们的美好回忆</div>
-    </div>
 
     <script>
         // Enhanced Stars
@@ -631,59 +558,9 @@
             }
         }
         
-        // Memory Frame Logic
-        function showMemoryFrame() {
-            const frame = document.querySelector('.memory-frame');
-            frame.classList.add('active');
-            
-            // Hide after some time
-            setTimeout(() => {
-                frame.classList.remove('active');
-            }, 5000);
-        }
-        
         // Toggle background style
         function toggleBackground() {
             document.body.classList.toggle('alt-bg');
-        }
-        
-        // Music button functionality
-        function setupMusicButton() {
-            const musicBtn = document.querySelector('.music-btn');
-            let audio = new Audio();
-            audio.loop = true;
-            audio.volume = 0.5;
-            
-            // Create an array of romantic music URLs (these URLs won't actually work, they're just placeholders)
-            const musicURLs = [
-                'data:audio/mp3;base64,R0lGODlh', // Placeholder - won't actually play music
-            ];
-            
-            let isPlaying = false;
-            let currentTrackIndex = 0;
-            
-            musicBtn.addEventListener('click', function() {
-                if (isPlaying) {
-                    audio.pause();
-                    isPlaying = false;
-                    musicBtn.style.animationPlayState = 'running';
-                } else {
-                    audio.src = musicURLs[currentTrackIndex];
-                    audio.play().catch(e => console.log('Auto-play prevented by browser'));
-                    isPlaying = true;
-                    musicBtn.style.animationPlayState = 'paused';
-                }
-            });
-            
-            // For track changing - click with ALT key
-            musicBtn.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                currentTrackIndex = (currentTrackIndex + 1) % musicURLs.length;
-                if (isPlaying) {
-                    audio.src = musicURLs[currentTrackIndex];
-                    audio.play().catch(e => console.log('Auto-play prevented by browser'));
-                }
-            });
         }
 
         // Initialization
@@ -693,7 +570,6 @@
             cycleQuotes();
             timer();
             setInterval(timer, 1000);
-            setupMusicButton();
             
             // Create elements at intervals
             setInterval(() => createFloatingElement('cherry-blossom', '🌸', Math.random() * 5 + 8, 'fall'), 200);
@@ -702,9 +578,6 @@
             setInterval(() => createFloatingElement('balloon', '🎈', Math.random() * 10 + 15, 'float-up'), 1000);
             setInterval(createFirework, 2000);
             setInterval(toggleBackground, 15000);
-            
-            // Show memory frame periodically
-            setInterval(showMemoryFrame, 20000);
             
             // Mouse Follow Heart with trail effect
             const heart = document.querySelector('.heart');
