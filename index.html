@@ -3,15 +3,30 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>Our Love Story</title>
+    <title>Our Eternal Love Story</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+        
+        :root {
+            --primary-color: #ff1493;
+            --secondary-color: #ffb6c1;
+            --background-start: #1a0033;
+            --background-end: #660066;
+            --text-shadow: 0 0 15px rgba(255, 182, 193, 0.7);
+        }
+        
         body {
             margin: 0;
-            background: linear-gradient(to bottom, #1a0033, #660066);
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
             overflow: hidden;
             font-family: 'Microsoft YaHei', Arial, sans-serif;
             color: #fff;
             min-height: 100vh;
+            transition: background 3s ease;
+        }
+        
+        body.alt-bg {
+            background: linear-gradient(135deg, #330033, #990066, #660099);
         }
 
         .content {
@@ -21,12 +36,15 @@
             transform: translateY(-50%);
             text-align: center;
             z-index: 10;
-            text-shadow: 0 0 15px rgba(255, 182, 193, 0.7);
+            text-shadow: var(--text-shadow);
+            padding: 0 20px;
+            box-sizing: border-box;
         }
 
         .title {
-            font-size: 32px;
-            color: #ff1493;
+            font-family: 'Dancing Script', cursive, 'Microsoft YaHei';
+            font-size: 48px;
+            color: var(--primary-color);
             margin-bottom: 25px;
             animation: glow 2s ease-in-out infinite alternate;
             letter-spacing: 2px;
@@ -34,38 +52,56 @@
 
         .timer {
             font-size: 26px;
-            margin: 25px 0;
+            margin: 25px auto;
             background: rgba(255, 255, 255, 0.15);
             padding: 20px;
             border-radius: 20px;
             backdrop-filter: blur(8px);
             box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+            max-width: 600px;
+            transform: perspective(500px) rotateX(5deg);
+            transition: transform 0.5s ease;
+        }
+        
+        .timer:hover {
+            transform: perspective(500px) rotateX(0deg) scale(1.05);
         }
 
         .timer b {
-            color: #ff1493;
+            color: var(--primary-color);
             font-size: 30px;
             text-shadow: 0 0 15px rgba(255, 105, 180, 0.9);
         }
 
         .quotes-container {
             position: relative;
-            margin-top: 35px;
+            margin: 35px auto;
+            height: 120px;
+            max-width: 800px;
         }
 
         .quote {
-            font-size: 22px;
-            color: #ffb6c1;
+            font-size: 24px;
+            color: var(--secondary-color);
             margin: 20px 0;
             opacity: 0;
             position: absolute;
             width: 100%;
             left: 0;
-            transition: opacity 1.5s ease-in-out;
+            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+            transform: translateY(20px);
         }
 
         .quote.active {
             opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .quote-author {
+            font-size: 18px;
+            margin-top: 10px;
+            font-style: italic;
+            opacity: 0.8;
         }
 
         /* Enhanced Starry Sky */
@@ -74,24 +110,40 @@
             background: #fff;
             border-radius: 50%;
             filter: blur(1px);
+            z-index: 1;
         }
 
         .star.small { width: 1px; height: 1px; animation: twinkle 1.5s infinite; }
         .star.medium { width: 2px; height: 2px; animation: twinkle 2s infinite; }
         .star.large { width: 3px; height: 3px; animation: twinkle 2.5s infinite; }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.9; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.7); }
+        .star.shooting {
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #fff 20%, #fff 60%, transparent);
+            filter: blur(2px);
+            transform: rotate(45deg);
+            opacity: 0;
+            animation: shoot 3s linear infinite;
         }
 
-        /* Cherry Blossoms */
-        .cherry-blossom {
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.9; transform: scale(1); filter: blur(1px); }
+            50% { opacity: 0.4; transform: scale(0.7); filter: blur(2px); }
+        }
+        
+        @keyframes shoot {
+            0% { transform: translateX(-100px) translateY(-100px) rotate(45deg); opacity: 1; width: 50px; }
+            100% { transform: translateX(calc(100vw + 100px)) translateY(calc(100vh + 100px)) rotate(45deg); opacity: 0; width: 10px; }
+        }
+
+        /* Floating Elements */
+        .float-element {
             position: absolute;
-            width: 15px;
-            height: 15px;
+            width: 20px;
+            height: 20px;
             background: none;
-            transform-origin: center;
+            pointer-events: none;
+            z-index: 2;
         }
 
         .cherry-blossom::before {
@@ -100,36 +152,10 @@
             position: absolute;
         }
 
-        @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(1080deg); opacity: 0; }
-        }
-
-        /* Roses */
-        .rose {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: none;
-        }
-
         .rose::before {
             content: '🌹';
             font-size: 20px;
             position: absolute;
-        }
-
-        @keyframes roseFall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
-
-        /* Snowflakes */
-        .snowflake {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: none;
         }
 
         .snowflake::before {
@@ -137,26 +163,54 @@
             font-size: 10px;
             position: absolute;
         }
+        
+        .butterfly::before {
+            content: '🦋';
+            font-size: 18px;
+            position: absolute;
+            animation: flutter 2s ease-in-out infinite alternate;
+        }
+        
+        .balloon::before {
+            content: '🎈';
+            font-size: 22px;
+            position: absolute;
+        }
 
-        @keyframes snowFall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(180deg); opacity: 0; }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 1; }
+            50% { transform: translateY(50vh) rotate(540deg) translateX(20px); opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(1080deg) translateX(10px); opacity: 0; }
+        }
+        
+        @keyframes flutter {
+            0% { transform: translateX(0) rotate(10deg); }
+            25% { transform: translateX(5px) rotate(-5deg); }
+            50% { transform: translateX(-5px) rotate(5deg); }
+            75% { transform: translateX(5px) rotate(-10deg); }
+            100% { transform: translateX(0) rotate(15deg); }
+        }
+        
+        @keyframes float-up {
+            0% { transform: translateY(100vh) rotate(0deg) translateX(0); opacity: 1; }
+            50% { transform: translateY(50vh) rotate(180deg) translateX(20px); opacity: 0.8; }
+            100% { transform: translateY(-10vh) rotate(360deg) translateX(-20px); opacity: 0; }
         }
 
         /* Fireworks */
         .firework {
             position: absolute;
-            width: 5px;
-            height: 5px;
-            background: radial-gradient(circle, #ff69b4, transparent);
-            border-radius: 50%;
-            animation: explode 1.5s ease-out forwards;
+            z-index: 2;
         }
-
-        @keyframes explode {
-            0% { transform: scale(0); opacity: 1; }
-            50% { transform: scale(3); opacity: 0.8; }
-            100% { transform: scale(0); opacity: 0; }
+        
+        .firework-circle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, var(--primary-color), transparent 70%);
+            border-radius: 50%;
+            transform-origin: center center;
+            opacity: 0;
         }
 
         /* Enhanced Heart */
@@ -167,8 +221,10 @@
             background: rgba(255, 20, 147, 0.9);
             transform: rotate(45deg);
             animation: beat 1s ease-in-out infinite;
-            box-shadow: 0 0 50px #ff1493;
+            box-shadow: 0 0 50px var(--primary-color);
             z-index: 5;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .heart::before,
@@ -179,11 +235,42 @@
             height: 40px;
             background: rgba(255, 20, 147, 0.9);
             border-radius: 50%;
-            box-shadow: 0 0 50px #ff1493;
+            box-shadow: 0 0 50px var(--primary-color);
         }
 
         .heart::before { top: -20px; left: 0; }
         .heart::after { left: -20px; top: 0; }
+        
+        .heart:hover {
+            transform: scale(1.2) rotate(45deg);
+            box-shadow: 0 0 70px var(--primary-color);
+        }
+        
+        .heart-trail {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 20, 147, 0.4);
+            transform: rotate(45deg);
+            box-shadow: 0 0 20px var(--primary-color);
+            z-index: 3;
+            pointer-events: none;
+            opacity: 0.7;
+            animation: fadeOut 1s forwards;
+        }
+
+        .heart-trail::before,
+        .heart-trail::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 20, 147, 0.4);
+            border-radius: 50%;
+        }
+
+        .heart-trail::before { top: -10px; left: 0; }
+        .heart-trail::after { left: -10px; top: 0; }
 
         @keyframes beat {
             0% { transform: scale(1) rotate(45deg); }
@@ -192,34 +279,188 @@
             60% { transform: scale(1.25) rotate(45deg); }
             80% { transform: scale(1) rotate(45deg); }
         }
+        
+        @keyframes fadeOut {
+            0% { opacity: 0.7; transform: scale(1) rotate(45deg); }
+            100% { opacity: 0; transform: scale(0.5) rotate(45deg); }
+        }
 
         @keyframes glow {
-            from { text-shadow: 0 0 5px #fff, 0 0 15px #fff, 0 0 25px #ff1493; }
-            to { text-shadow: 0 0 10px #fff, 0 0 25px #fff, 0 0 40px #ff1493; }
+            from { text-shadow: 0 0 5px #fff, 0 0 15px #fff, 0 0 25px var(--primary-color); }
+            to { text-shadow: 0 0 10px #fff, 0 0 25px #fff, 0 0 40px var(--primary-color); }
+        }
+        
+        /* Photo frame effect */
+        .memory-frame {
+            width: 0;
+            height: 0;
+            position: absolute;
+            top: 30%;
+            left: 0;
+            border-radius: 15px;
+            overflow: hidden;
+            opacity: 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: rotate(-5deg) translateX(-100%);
+            transition: all 1s ease;
+            z-index: 15;
+            border: 10px solid rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .memory-frame.active {
+            width: 300px;
+            height: 200px;
+            opacity: 1;
+            transform: rotate(-5deg) translateX(20px);
+        }
+        
+        .memory-message {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        /* Music button */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 0 15px rgba(255,20,147,0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        .music-btn::before {
+            content: "♫";
+            font-size: 24px;
+            color: white;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(255,20,147,0.5); }
+            50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(255,20,147,0.7); }
+            100% { transform: scale(1); box-shadow: 0 0 15px rgba(255,20,147,0.5); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .title { font-size: 36px; }
+            .timer { padding: 15px; font-size: 22px; }
+            .timer b { font-size: 26px; }
+            .quote { font-size: 20px; }
+            .memory-frame.active { width: 70vw; height: 40vh; }
+        }
+        
+        /* Animated background */
+        .background-bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: rise 15s infinite ease-in;
+        }
+        
+        @keyframes rise {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-1000px) translateX(20px) scale(1.5);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="music-btn" title="播放/暂停音乐"></div>
+    
+    <div class="background-bubbles"></div>
+    
     <div class="content">
-        <div class="title">Our Love Story</div>
+        <div class="title">Our Eternal Love Story</div>
         <div class="timer">
             <b id="d"></b> 天 <b id="h"></b> 小时 <b id="m"></b> 分钟 <b id="s"></b> 秒
         </div>
         <div class="quotes-container">
-            <div class="quote">既见君子，云胡不喜</div>
-            <div class="quote">愿有岁月可回首，且以深情共白头</div>
-            <div class="quote">执子之手，与子偕老</div>
-            <div class="quote">人生若只如初见，何事秋风悲画扇</div>
-            <div class="quote">山无棱，天地合，乃敢与君绝</div>
+            <div class="quote">
+                既见君子，云胡不喜
+                <div class="quote-author">— 《诗经》</div>
+            </div>
+            <div class="quote">
+                愿有岁月可回首，且以深情共白头
+                <div class="quote-author">— 席慕蓉</div>
+            </div>
+            <div class="quote">
+                执子之手，与子偕老
+                <div class="quote-author">— 《诗经》</div>
+            </div>
+            <div class="quote">
+                人生若只如初见，何事秋风悲画扇
+                <div class="quote-author">— 纳兰容若</div>
+            </div>
+            <div class="quote">
+                山无棱，天地合，乃敢与君绝
+                <div class="quote-author">— 《上邪》</div>
+            </div>
+            <div class="quote">
+                相遇是缘分，相守是幸福
+                <div class="quote-author">— 心灵的诗句</div>
+            </div>
+            <div class="quote">
+                你若安好，便是晴天
+                <div class="quote-author">— 林徽因</div>
+            </div>
+            <div class="quote">
+                一生一世一双人，半醉半醒半浮生
+                <div class="quote-author">— 浮生若梦</div>
+            </div>
+            <div class="quote">
+                花开不是为了花落，而是为了遇见你
+                <div class="quote-author">— 现代诗</div>
+            </div>
         </div>
     </div>
+    
     <div class="heart"></div>
+    <div class="memory-frame">
+        <div class="memory-message">我们的美好回忆</div>
+    </div>
 
     <script>
         // Enhanced Stars
         function createStars() {
             const types = ['small', 'medium', 'large'];
-            const counts = [200, 60, 30];
+            const counts = [200, 80, 40];
+            
             types.forEach((type, index) => {
                 for (let i = 0; i < counts[index]; i++) {
                     const star = document.createElement('div');
@@ -230,56 +471,99 @@
                     document.body.appendChild(star);
                 }
             });
+            
+            // Add shooting stars
+            for (let i = 0; i < 10; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'star shooting';
+                shootingStar.style.top = Math.random() * 30 + 'vh';
+                shootingStar.style.left = Math.random() * 50 + 'vw';
+                shootingStar.style.animationDelay = Math.random() * 15 + 's';
+                document.body.appendChild(shootingStar);
+            }
         }
 
-        // Cherry Blossoms
-        function createCherryBlossom() {
-            const cherryBlossom = document.createElement('div');
-            cherryBlossom.className = 'cherry-blossom';
-            cherryBlossom.style.left = Math.random() * 100 + 'vw';
-            cherryBlossom.style.animation = `fall ${Math.random() * 5 + 8}s linear forwards`;
-            document.body.appendChild(cherryBlossom);
-            setTimeout(() => cherryBlossom.remove(), 13000);
-        }
-
-        // Roses
-        function createRose() {
-            const rose = document.createElement('div');
-            rose.className = 'rose';
-            rose.style.left = Math.random() * 100 + 'vw';
-            rose.style.animation = `roseFall ${Math.random() * 6 + 7}s linear forwards`;
-            document.body.appendChild(rose);
-            setTimeout(() => rose.remove(), 13000);
-        }
-
-        // Snowflakes
-        function createSnowflake() {
-            const snowflake = document.createElement('div');
-            snowflake.className = 'snowflake';
-            snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animation = `snowFall ${Math.random() * 5 + 10}s linear forwards`;
-            document.body.appendChild(snowflake);
-            setTimeout(() => snowflake.remove(), 15000);
+        // Create floating elements
+        function createFloatingElement(className, emoji, duration, animationType) {
+            const element = document.createElement('div');
+            element.className = `float-element ${className}`;
+            element.style.left = Math.random() * 100 + 'vw';
+            
+            // Choose animation type
+            if (animationType === 'fall') {
+                element.style.animation = `fall ${duration}s linear forwards`;
+            } else if (animationType === 'float-up') {
+                element.style.animation = `float-up ${duration}s linear forwards`;
+            }
+            
+            document.body.appendChild(element);
+            setTimeout(() => element.remove(), duration * 1000);
         }
 
         // Fireworks
         function createFirework() {
+            const colors = ['#ff1493', '#ff69b4', '#ffb6c1', '#ff6347', '#ff7f50', '#fa8072', '#e191fd', '#a555ec'];
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * (window.innerHeight * 0.6);
+            
             const firework = document.createElement('div');
             firework.className = 'firework';
-            firework.style.left = Math.random() * 100 + 'vw';
-            firework.style.top = Math.random() * 100 + 'vh';
+            firework.style.left = x + 'px';
+            firework.style.top = y + 'px';
             document.body.appendChild(firework);
-            setTimeout(() => firework.remove(), 1500);
+            
+            // Create explosion particles
+            const particleCount = Math.floor(Math.random() * 20) + 30;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-circle';
+                
+                // Random color from the palette
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = `radial-gradient(circle, ${color}, transparent 70%)`;
+                
+                // Random angle and distance
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 80 + 40;
+                const speedMultiplier = Math.random() * 0.5 + 0.5;
+                
+                // Set animation
+                particle.style.animation = `explode ${Math.random() * 1 + 1.5}s forwards`;
+                particle.style.animationDelay = '0s';
+                
+                // Set transform
+                firework.appendChild(particle);
+                
+                // Animate to final position
+                setTimeout(() => {
+                    particle.style.opacity = '1';
+                    particle.style.transform = `translateX(${Math.cos(angle) * distance}px) translateY(${Math.sin(angle) * distance}px) scale(${Math.random() * 0.5 + 0.5})`;
+                    particle.style.transition = `all ${1.5 * speedMultiplier}s cubic-bezier(0.1, 0.8, 0.8, 1)`;
+                    
+                    // Fade out
+                    setTimeout(() => {
+                        particle.style.opacity = '0';
+                        particle.style.transition = `opacity 0.5s ease-out`;
+                    }, 1000 * speedMultiplier);
+                }, 10);
+            }
+            
+            // Remove firework after animation
+            setTimeout(() => firework.remove(), 3000);
         }
 
         // Cycle Quotes
         function cycleQuotes() {
             const quotes = document.querySelectorAll('.quote');
             let currentQuote = 0;
+            
+            // First activation
+            quotes[0].classList.add('active');
+            
             setInterval(() => {
-                quotes.forEach(quote => quote.classList.remove('active'));
-                quotes[currentQuote].classList.add('active');
+                quotes[currentQuote].classList.remove('active');
                 currentQuote = (currentQuote + 1) % quotes.length;
+                quotes[currentQuote].classList.add('active');
             }, 5000);
         }
 
@@ -299,7 +583,7 @@
 
             const days = Math.floor(t / (1000 * 60 * 60 * 24));
             const hours = String(Math.floor((t / (1000 * 60 * 60)) % 24)).padStart(2, '0');
-            const minutes = String(Math.floor((t / (1000 * 60)) % 60)).padStart(2, '0');
+            const minutes = String(Math.floor((t / 1000 / 60) % 60)).padStart(2, '0');
             const seconds = String(Math.floor((t / 1000) % 60)).padStart(2, '0');
 
             document.getElementById('d').innerHTML = days;
@@ -307,25 +591,148 @@
             document.getElementById('m').innerHTML = minutes;
             document.getElementById('s').innerHTML = seconds;
         }
+        
+        // Heart trail effect
+        let trailInterval;
+        function startHeartTrail(x, y) {
+            if (trailInterval) clearInterval(trailInterval);
+            
+            trailInterval = setInterval(() => {
+                const heart = document.querySelector('.heart');
+                if (!heart) return;
+                
+                const trail = document.createElement('div');
+                trail.className = 'heart-trail';
+                trail.style.left = (parseInt(heart.style.left) + 20) + 'px';
+                trail.style.top = (parseInt(heart.style.top) + 20) + 'px';
+                document.body.appendChild(trail);
+                
+                // Remove trail after animation
+                setTimeout(() => trail.remove(), 1000);
+            }, 100);
+        }
+        
+        function stopHeartTrail() {
+            if (trailInterval) clearInterval(trailInterval);
+        }
+        
+        // Create bubble background
+        function createBubbles() {
+            const bubblesContainer = document.querySelector('.background-bubbles');
+            
+            for (let i = 0; i < 30; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.width = bubble.style.height = `${Math.random() * 60 + 20}px`;
+                bubble.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                bubble.style.animationDelay = `${Math.random() * 15}s`;
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+        
+        // Memory Frame Logic
+        function showMemoryFrame() {
+            const frame = document.querySelector('.memory-frame');
+            frame.classList.add('active');
+            
+            // Hide after some time
+            setTimeout(() => {
+                frame.classList.remove('active');
+            }, 5000);
+        }
+        
+        // Toggle background style
+        function toggleBackground() {
+            document.body.classList.toggle('alt-bg');
+        }
+        
+        // Music button functionality
+        function setupMusicButton() {
+            const musicBtn = document.querySelector('.music-btn');
+            let audio = new Audio();
+            audio.loop = true;
+            audio.volume = 0.5;
+            
+            // Create an array of romantic music URLs (these URLs won't actually work, they're just placeholders)
+            const musicURLs = [
+                'data:audio/mp3;base64,R0lGODlh', // Placeholder - won't actually play music
+            ];
+            
+            let isPlaying = false;
+            let currentTrackIndex = 0;
+            
+            musicBtn.addEventListener('click', function() {
+                if (isPlaying) {
+                    audio.pause();
+                    isPlaying = false;
+                    musicBtn.style.animationPlayState = 'running';
+                } else {
+                    audio.src = musicURLs[currentTrackIndex];
+                    audio.play().catch(e => console.log('Auto-play prevented by browser'));
+                    isPlaying = true;
+                    musicBtn.style.animationPlayState = 'paused';
+                }
+            });
+            
+            // For track changing - click with ALT key
+            musicBtn.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                currentTrackIndex = (currentTrackIndex + 1) % musicURLs.length;
+                if (isPlaying) {
+                    audio.src = musicURLs[currentTrackIndex];
+                    audio.play().catch(e => console.log('Auto-play prevented by browser'));
+                }
+            });
+        }
 
         // Initialization
-        createStars();
-        setInterval(createCherryBlossom, 200);
-        setInterval(createRose, 400);
-        setInterval(createSnowflake, 300);
-        setInterval(createFirework, 2000);
-        cycleQuotes();
-        timer();
-        setInterval(timer, 1000);
-
-        // Mouse Follow Heart
-        document.addEventListener('mousemove', (e) => {
+        window.onload = function() {
+            createStars();
+            createBubbles();
+            cycleQuotes();
+            timer();
+            setInterval(timer, 1000);
+            setupMusicButton();
+            
+            // Create elements at intervals
+            setInterval(() => createFloatingElement('cherry-blossom', '🌸', Math.random() * 5 + 8, 'fall'), 200);
+            setInterval(() => createFloatingElement('rose', '🌹', Math.random() * 6 + 7, 'fall'), 400);
+            setInterval(() => createFloatingElement('butterfly', '🦋', Math.random() * 8 + 10, 'fall'), 600);
+            setInterval(() => createFloatingElement('balloon', '🎈', Math.random() * 10 + 15, 'float-up'), 1000);
+            setInterval(createFirework, 2000);
+            setInterval(toggleBackground, 15000);
+            
+            // Show memory frame periodically
+            setInterval(showMemoryFrame, 20000);
+            
+            // Mouse Follow Heart with trail effect
             const heart = document.querySelector('.heart');
-            const x = e.clientX;
-            const y = e.clientY;
-            heart.style.left = x - 20 + 'px';
-            heart.style.top = y - 20 + 'px';
-        });
+            
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX;
+                const y = e.clientY;
+                heart.style.left = (x - 20) + 'px';
+                heart.style.top = (y - 20) + 'px';
+            });
+            
+            heart.addEventListener('mousedown', () => {
+                heart.style.transform = 'scale(1.5) rotate(45deg)';
+                startHeartTrail();
+            });
+            
+            document.addEventListener('mouseup', () => {
+                heart.style.transform = 'rotate(45deg)';
+                stopHeartTrail();
+            });
+            
+            // Add click event for heart
+            heart.addEventListener('click', function() {
+                createFirework();
+                createFirework();
+                createFirework();
+            });
+        };
     </script>
 </body>
 </html>
